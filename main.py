@@ -21,6 +21,7 @@ class DrawingApp:
 
         self.canvas.bind('<B1-Motion>', self.paint)
         self.canvas.bind('<ButtonRelease-1>', self.reset)
+        self.canvas.bind('<Button-3>', self.pick_color)
 
     def setup_ui(self):
         '''
@@ -122,6 +123,13 @@ class DrawingApp:
             self.image.save(file_path)
             messagebox.showinfo("Информация", "Изображение успешно сохранено!")
 
+    def pick_color(self, event):
+        """Метод выбора цвета пипеткой"""
+        x, y = event.x, event.y
+        pixel_color = self.image.getpixel((x, y))[:3]  # берем RGB компоненты без альфа-канала
+        hex_color = "#{:02X}{:02X}{:02X}".format(*pixel_color)
+        self.pen_color = hex_color
+        print(f"Выбран цвет: {hex_color}")
 
 def main():
     root = tk.Tk()
