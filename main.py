@@ -23,6 +23,7 @@ class DrawingApp:
         self.canvas.bind('<ButtonRelease-1>', self.reset)
         self.canvas.bind('<Button-3>', self.pick_color)
 
+
     def setup_ui(self):
         '''
         :return: Отображение панели инструментов (выбор цвета кисти, выбор размера кисти, очистка экрана,
@@ -40,6 +41,12 @@ class DrawingApp:
         save_button = tk.Button(control_frame, text="Сохранить", command=self.save_image)
         save_button.pack(side=tk.LEFT)
 
+        # Добавление горячей клавиши Control-S для вызова функции save_image
+        self.root.bind('<Control-s>', lambda event: self.save_image())
+
+        # Добавление горячей клавиши Control-C для вызова функции choose_color
+        self.root.bind('<Control-c>', lambda event: self.choose_color())
+
         # Создаем объект OptionMenu и связываем его с переменной self.selected_brush_size
         sizes = [1, 2, 5, 10]
         self.selected_brush_size = tk.StringVar()
@@ -52,6 +59,8 @@ class DrawingApp:
         self.selected_brush_size.trace('w', self.update_brush_size)
         self.eraser_button = tk.Button(control_frame, text="Ластик", command=lambda: self.set_eraser())
         self.eraser_button.pack(side='left')
+
+
 
     def set_eraser(self):
         '''
