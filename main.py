@@ -60,7 +60,9 @@ class DrawingApp:
         self.eraser_button = tk.Button(control_frame, text="Ластик", command=lambda: self.set_eraser())
         self.eraser_button.pack(side='left')
 
-
+        # Создание холста для предпросмотра цвета:
+        self.preview_canvas = tk.Canvas(self.root, width=40, height=40, bg="black", highlightthickness=0)
+        self.preview_canvas.place(relx=0.93, rely=0.0)
 
     def set_eraser(self):
         '''
@@ -120,6 +122,9 @@ class DrawingApp:
         :return: Возвращает выбранный цвет кисти
         """
         self.pen_color = colorchooser.askcolor(color=self.pen_color)[1]
+        if self.pen_color is not None:
+            # Обновление цвета холста для предпросмотра цвета:
+            self.preview_canvas.config(bg=self.pen_color)
 
     def save_image(self):
         """
