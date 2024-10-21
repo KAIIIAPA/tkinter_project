@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import colorchooser, filedialog, messagebox
+from tkinter import colorchooser, filedialog, messagebox, simpledialog
 from PIL import Image, ImageDraw
 
 
@@ -23,12 +23,11 @@ class DrawingApp:
         self.canvas.bind('<ButtonRelease-1>', self.reset)
         self.canvas.bind('<Button-3>', self.pick_color)
 
-
     def setup_ui(self):
-        '''
+        """
         :return: Отображение панели инструментов (выбор цвета кисти, выбор размера кисти, очистка экрана,
         сохранение рисунка и применение ластика)
-        '''
+        """
         control_frame = tk.Frame(self.root)
         control_frame.pack(fill=tk.X)
 
@@ -40,6 +39,10 @@ class DrawingApp:
 
         save_button = tk.Button(control_frame, text="Сохранить", command=self.save_image)
         save_button.pack(side=tk.LEFT)
+
+        # Кнопка для изменения размера холста
+        change_button = tk.Button(control_frame, text="Изменить размер холста", command=self.change_canvas_size)
+        change_button.pack(side=tk.LEFT)
 
         # Добавление горячей клавиши Control-S для вызова функции save_image
         self.root.bind('<Control-s>', lambda event: self.save_image())
@@ -144,6 +147,20 @@ class DrawingApp:
         hex_color = "#{:02X}{:02X}{:02X}".format(*pixel_color)
         self.pen_color = hex_color
         print(f"Выбран цвет: {hex_color}")
+
+    def change_canvas_size(self):
+        """
+        :return: Функция для изменения размера холста
+        """
+        new_width = simpledialog.askinteger("Изменить размер холста", "Введите новую ширину холста:",
+                                            parent=self.root, minvalue=10)
+        new_height = simpledialog.askinteger("Изменить размер холста", "Введите новую высоту холста:",
+                                             parent=self.root, minvalue=10)
+        if new_height is not None or new_height is not None:
+            # Обновление размеров холста
+            self.canvas.config(width=new_width, height=new_height)
+            self.canvas.delete('all')
+            self.canvas.create_rectangle((0, 0, new_width, new_height), fill='white', outline='black')
 
 def main():
     root = tk.Tk()
