@@ -156,7 +156,7 @@ class DrawingApp:
                                             parent=self.root, minvalue=10)
         new_height = simpledialog.askinteger("Изменить размер холста", "Введите новую высоту холста:",
                                              parent=self.root, minvalue=10)
-        if new_height is not None or new_height is not None:
+        if new_height is not None and new_height is not None:
             # Обновление размеров холста
             self.canvas.config(width=new_width, height=new_height)
             self.canvas.delete('all')
