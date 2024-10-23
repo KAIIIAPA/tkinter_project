@@ -8,10 +8,10 @@ class DrawingApp:
         self.root = root
         self.root.title("Рисовалка с сохранением в PNG")
 
-        self.image = Image.new("RGB", (600, 400), "white")
+        self.image = Image.new("RGB", (800, 600), "white")
         self.draw = ImageDraw.Draw(self.image)
 
-        self.canvas = tk.Canvas(root, width=600, height=400, bg='white')
+        self.canvas = tk.Canvas(root, width=800, height=600, bg='white')
         self.canvas.pack()
 
         self.setup_ui()
@@ -44,6 +44,14 @@ class DrawingApp:
         change_button = tk.Button(control_frame, text="Изменить размер холста", command=self.change_canvas_size)
         change_button.pack(side=tk.LEFT)
 
+        # Кнопка "Добавить текст"
+        button_add_text = tk.Button(control_frame, text="Добавить текст", command=self.on_add_text)
+        button_add_text.pack(side=tk.LEFT)
+
+        # Кнопка "Изменить фон"
+        button_change_bg = tk.Button(control_frame, text="Изменить фон", command=self.on_change_bg)
+        button_change_bg.pack(side=tk.LEFT)
+
         # Добавление горячей клавиши Control-S для вызова функции save_image
         self.root.bind('<Control-s>', lambda event: self.save_image())
 
@@ -65,7 +73,7 @@ class DrawingApp:
 
         # Создание холста для предпросмотра цвета:
         self.preview_canvas = tk.Canvas(self.root, width=40, height=40, bg="black", highlightthickness=0)
-        self.preview_canvas.place(relx=0.93, rely=0.0)
+        self.preview_canvas.place(relx=0.94, rely=0.01)
 
     def set_eraser(self):
         '''
@@ -161,6 +169,34 @@ class DrawingApp:
             self.canvas.config(width=new_width, height=new_height)
             self.canvas.delete('all')
             self.canvas.create_rectangle((0, 0, new_width, new_height), fill='white', outline='black')
+
+    def on_add_text(self):
+        """
+        :return: Функция для ввода текста который необходимо вставить
+        """
+        text = simpledialog.askstring("Введите текст", "Введите текст:", parent=self.root)
+        if text is not None:
+            self.canvas.bind('<Button-1>', lambda event: self.on_click(event, text))
+
+    def on_click(self, event, text):
+        """
+        :param event: для получения координат Х и Y координат
+        :param text: Текст который мы хотим вставить
+
+        :return: Возвращает текст на холст при нажатии левой кнопки мыши
+        """
+        x, y = event.x, event.y
+        self.canvas.create_text(x, y, text=text, fill=self.pen_color)
+        self.canvas.unbind('<Button-1>')
+
+    def on_change_bg(self):
+        """
+        :return: Возвращает холст с выбранным цветом
+        """
+        new_color = colorchooser.askcolor(parent=self.root)[1]
+        if new_color is not None:
+            self.canvas.config(background=new_color)
+
 
 def main():
     root = tk.Tk()
